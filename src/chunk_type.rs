@@ -9,10 +9,10 @@ use anyhow::{bail, ensure};
 pub struct ChunkType([u8; 4]);
 
 impl ChunkType {
-    fn new(bytes: [u8; 4]) -> Self {
+    pub fn new(bytes: [u8; 4]) -> Self {
         Self(bytes)
     }
-    fn bytes(&self) -> [u8; 4] {
+    pub fn bytes(&self) -> [u8; 4] {
         self.0
     }
     fn is_byte_valid(b: &u8) -> bool {
