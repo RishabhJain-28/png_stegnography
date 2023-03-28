@@ -8,7 +8,7 @@ use crate::chunk_type::ChunkType;
 
 #[derive(Debug)]
 pub struct Chunk {
-    length: usize,
+    length: u32,
     chunk_type: ChunkType,
     data: Vec<u8>,
     crc: u32,
@@ -23,7 +23,7 @@ impl Chunk {
     }
     pub fn new(chunk_type: ChunkType, data: Vec<u8>) -> Self {
         Self {
-            length: data.len(),
+            length: data.len() as u32,
             crc: Self::cal_chunk_crc(&data, &chunk_type),
             chunk_type,
             data,
@@ -66,13 +66,14 @@ impl TryFrom<&[u8]> for Chunk {
         let mut it = value.iter().cloned();
 
         let length_bytes: [u8; 4] = (&mut it).take(4).collect::<Vec<u8>>()[0..4].try_into()?;
-        let length = u32::from_be_bytes(length_bytes) as usize;
+        let length = u32::from_be_bytes(length_bytes);
 
         let type_bytes: [u8; 4] = (&mut it).take(4).collect::<Vec<u8>>()[0..4].try_into()?;
         let chunk_type = ChunkType::try_from(type_bytes)?;
 
-        let data_bytes: Vec<u8> =
-            (&mut it).take(length).collect::<Vec<u8>>()[0..(length)].try_into()?;
+        let data_bytes: Vec<u8> = (&mut it).take(length as usize).collect::<Vec<u8>>()
+            [0..(length as usize)]
+            .try_into()?;
 
         let crc_bytes: [u8; 4] = (&mut it).take(4).collect::<Vec<u8>>()[0..4].try_into()?;
         let crc = u32::from_be_bytes(crc_bytes);
