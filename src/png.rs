@@ -1,10 +1,6 @@
 use crate::chunk::Chunk;
 use anyhow::{anyhow, Result};
-// use core::result::Result::Ok;
-use std::{
-    fmt::Display,
-    io::{BufReader, Read},
-};
+use std::fmt::Display;
 
 #[derive(Debug)]
 pub struct Png(Vec<Chunk>);
@@ -35,18 +31,13 @@ impl Png {
         &self.0
     }
 
-    fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
+    pub fn chunk_by_type(&self, chunk_type: &str) -> Option<&Chunk> {
         self.0
             .iter()
             .find(|v| v.chunk_type().to_string() == chunk_type)
-        // if ele.is_none() {
-        //     return None;
-        // }
-        // ele
     }
-    fn as_bytes(&self) -> Vec<u8> {
+    pub fn as_bytes(&self) -> Vec<u8> {
         let mut res = Vec::from(Self::STANDARD_HEADER);
-        // res.extend();
         for chunk in &self.0 {
             res.append(&mut chunk.as_bytes())
         }

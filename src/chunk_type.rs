@@ -3,7 +3,7 @@ use std::{
     str::{from_utf8, FromStr},
 };
 
-use anyhow::{bail, ensure};
+use anyhow::ensure;
 
 #[derive(PartialEq, Eq, Debug)]
 pub struct ChunkType([u8; 4]);
